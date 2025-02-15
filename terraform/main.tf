@@ -1,8 +1,8 @@
 provider "aws" {
   region = "af-south-1"
-  access_key = var.ACCESS_KEY
-  secret_key = var.SECRET_KEY
-  token = var.SESSION_TOKEN
+#   access_key = var.ACCESS_KEY
+#   secret_key = var.SECRET_KEY
+#   token = var.SESSION_TOKEN
 }
 
 resource "aws_db_instance" "bean-gardner" {
@@ -35,20 +35,20 @@ variable "db_password" {
   sensitive   = true
 }
 
-variable "ACCESS_KEY" {
-  description = "Database password"
-  type        = string
-  sensitive   = true
-}
+# variable "ACCESS_KEY" {
+#   description = "Database password"
+#   type        = string
+#   sensitive   = true
+# }
 
-variable "SECRET_KEY" {
-  description = "Database password"
-  type        = string
-  sensitive   = true
-}
+# variable "SECRET_KEY" {
+#   description = "Database password"
+#   type        = string
+#   sensitive   = true
+# }
 
-variable "SESSION_TOKEN" {
-  description = "Database password"
-  type        = string
-  sensitive   = true
-}
+# variable "SESSION_TOKEN" {
+#   description = "Database password"
+#   type        = string
+#   sensitive   = true
+# }

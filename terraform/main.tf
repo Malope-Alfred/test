@@ -1,12 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = ">= 3.20.0"
-    }
-  }
-}
-
 provider "aws" {
   region = "af-south-1"
 }
@@ -19,6 +10,27 @@ resource "aws_vpc" "main" {
   }
 }
 
+resource "aws_internet_gateway" "main" {
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name = "main_igw"
+  }
+}
+
+resource "aws_route_table" "public" {
+  vpc_id = aws_vpc.main.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.main.id
+  }
+
+  tags = {
+    Name = "public_route_table"
+  }
+}
+
 resource "aws_subnet" "public" {
   count = 3
   vpc_id            = aws_vpc.main.id
@@ -28,6 +40,12 @@ resource "aws_subnet" "public" {
   tags = {
     Name = "public_subnet_${count.index}"
   }
+}
+
+resource "aws_route_table_association" "public" {
+  count          = 3
+  subnet_id      = element(aws_subnet.public[*].id, count.index)
+  route_table_id = aws_route_table.public.id
 }
 
 data "aws_availability_zones" "available" {}

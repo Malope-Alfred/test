@@ -65,7 +65,7 @@ resource "aws_db_parameter_group" "bean_gardener" {
 }
 
 resource "aws_db_instance" "bean_gardener" {
-  identifier             = "bean_gardener"
+  identifier             = "gardener"
   instance_class         = "db.t4.micro"
   allocated_storage      = 20
   storage_type           = "gp2"

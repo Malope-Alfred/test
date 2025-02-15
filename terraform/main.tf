@@ -50,8 +50,8 @@ resource "aws_route_table_association" "public" {
 
 data "aws_availability_zones" "available" {}
 
-resource "aws_db_subnet_group" "bean_gardener_test" {
-  name       = "bean_gardener"
+resource "aws_db_subnet_group" "bean_gardener" {
+  name       = "bean_gardener_test"
   subnet_ids = aws_subnet.public[*].id
 
   tags = {
@@ -83,7 +83,7 @@ resource "aws_security_group" "bean_gardener_rds" {
 }
 
 resource "aws_db_parameter_group" "bean_gardener" {
-  name   = "beangardenertest1"
+  name   = "beangardenertest"
   family = "postgres16"
 
   parameter {
@@ -93,7 +93,7 @@ resource "aws_db_parameter_group" "bean_gardener" {
 }
 
 resource "aws_db_instance" "bean_gardener" {
-  identifier             = "beangardenertest"
+  identifier             = "beangardener"
   instance_class         = "db.t4.micro"
   allocated_storage      = 20
   storage_type           = "gp2"
@@ -102,7 +102,7 @@ resource "aws_db_instance" "bean_gardener" {
   username               = var.DB_USERNAME
   password               = var.DB_PASSWORD
 
-  db_subnet_group_name   = aws_db_subnet_group.bean_gardener_test.name
+  db_subnet_group_name   = aws_db_subnet_group.bean_gardener.name
   vpc_security_group_ids = [aws_security_group.bean_gardener_rds.id]
   parameter_group_name   = aws_db_parameter_group.bean_gardener.name
 

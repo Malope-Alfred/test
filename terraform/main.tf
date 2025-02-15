@@ -51,7 +51,7 @@ resource "aws_route_table_association" "public" {
 data "aws_availability_zones" "available" {}
 
 resource "aws_db_subnet_group" "bean_gardener" {
-  name       = "bean_gardener_test"
+  name       = "bean_gardener_test_test"
   subnet_ids = aws_subnet.public[*].id
 
   tags = {
@@ -83,7 +83,7 @@ resource "aws_security_group" "bean_gardener_rds" {
 }
 
 resource "aws_db_parameter_group" "bean_gardener" {
-  name   = "beangardenertesttest"
+  name   = "beangardenertesttttest"
   family = "postgres16"
 
   parameter {
@@ -93,7 +93,7 @@ resource "aws_db_parameter_group" "bean_gardener" {
 }
 
 resource "aws_db_instance" "bean_gardener" {
-  identifier             = "beangardenertesttest"
+  identifier             = "beangardenertttesttest"
   instance_class         = "db.t4.micro"
   allocated_storage      = 20
   storage_type           = "gp2"

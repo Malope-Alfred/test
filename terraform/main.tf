@@ -16,7 +16,7 @@ module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "2.77.0"
 
-  name                 = "education"
+  name                 = "bean_gardener"
   cidr                 = "10.0.0.0/16"
   azs                  = data.aws_availability_zones.available.names
   public_subnets       = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
@@ -57,7 +57,7 @@ resource "aws_security_group" "bean_gardener_rds" {
 }
 
 resource "aws_db_parameter_group" "bean_gardener" {
-  name   = "bean_gardener"
+  name   = "gardener"
   family = "postgres16"
 
   parameter {

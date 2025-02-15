@@ -1,0 +1,57 @@
+name: Deploy Terraform
+
+on:
+  push:
+    branches:
+      - main  # Change if using a different branch
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  terraform:
+    name: Terraform Deployment
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: latest
+
+      - name: Change to Terraform Directory
+        run: cd terraform  # Change this to your actual Terraform folder
+        shell: bash
+
+      - name: Initialize Terraform
+        run: |
+          cd terraform
+          terraform init
+
+      - name: Validate Terraform
+        run: |
+          cd terraform
+          terraform validate
+
+      - name: Plan Terraform Changes
+        run: |
+          cd terraform
+          terraform plan
+        env:
+          TF_VAR_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          TF_VAR_SECRET_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Apply Terraform Changes
+        if: github.ref == 'refs/heads/main'
+        run: |
+          cd terraform
+          terraform apply -auto-approve
+        env:
+          TF_VAR_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          TF_VAR_SECRET_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

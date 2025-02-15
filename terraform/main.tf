@@ -102,7 +102,7 @@ resource "aws_db_instance" "bean_gardener" {
   username               = var.DB_USERNAME
   password               = var.DB_PASSWORD
 
-  db_subnet_group_name   = aws_db_subnet_group.bean_gardener.name
+  db_subnet_group_name   = aws_db_subnet_group.bean_gardener_test.name
   vpc_security_group_ids = [aws_security_group.bean_gardener_rds.id]
   parameter_group_name   = aws_db_parameter_group.bean_gardener.name
 

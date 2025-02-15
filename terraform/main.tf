@@ -83,7 +83,7 @@ resource "aws_security_group" "bean_gardener_rds" {
 }
 
 resource "aws_db_parameter_group" "bean_gardener" {
-  name   = "beangardenertest"
+  name   = "beangardenertesttest"
   family = "postgres16"
 
   parameter {
@@ -93,7 +93,7 @@ resource "aws_db_parameter_group" "bean_gardener" {
 }
 
 resource "aws_db_instance" "bean_gardener" {
-  identifier             = "beangardener"
+  identifier             = "beangardenertesttest"
   instance_class         = "db.t4.micro"
   allocated_storage      = 20
   storage_type           = "gp2"

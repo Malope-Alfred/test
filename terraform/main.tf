@@ -14,7 +14,7 @@ data "aws_availability_zones" "available" {}
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "2.77.0"
+  version = "3.19.0"  # Update to the latest stable version
 
   name                 = "bean_gardener"
   cidr                 = "10.0.0.0/16"
@@ -102,20 +102,3 @@ variable "DB_PASSWORD" {
   sensitive   = true
 }
 
-# variable "ACCESS_KEY" {
-#   description = "Database password"
-#   type        = string
-#   sensitive   = true
-# }
-
-# variable "SECRET_KEY" {
-#   description = "Database password"
-#   type        = string
-#   sensitive   = true
-# }
-
-# variable "SESSION_TOKEN" {
-#   description = "Database password"
-#   type        = string
-#   sensitive   = true
-# }

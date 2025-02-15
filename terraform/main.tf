@@ -6,27 +6,23 @@ terraform {
     }
   }
 }
+
 provider "aws" {
   region = "af-south-1"
 }
 
-data "aws_availability_zones" "available" {}
+# Data source to get the default VPC
+data "aws_default_vpc" "default" {}
 
-module "vpc" {
-  source  = "terraform-aws-modules/vpc/aws"
-  version = "3.19.0"  # Update to the latest stable version
-
-  name                 = "bean_gardener"
-  cidr                 = "10.0.0.0/16"
-  azs                  = data.aws_availability_zones.available.names
-  public_subnets       = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
-  enable_dns_hostnames = true
-  enable_dns_support   = true
+# Data source to get the default subnets
+data "aws_default_subnet" "default" {
+  for_each = data.aws_availability_zones.available.names
+  availability_zone = each.value
 }
 
 resource "aws_db_subnet_group" "bean_gardener" {
   name       = "bean_gardener"
-  subnet_ids = module.vpc.public_subnets
+  subnet_ids = [for subnet in data.aws_default_subnet.default : subnet.id]
 
   tags = {
     Name = "bean_gardener_subnet"
@@ -35,7 +31,7 @@ resource "aws_db_subnet_group" "bean_gardener" {
 
 resource "aws_security_group" "bean_gardener_rds" {
   name   = "bean_gardener_rds"
-  vpc_id = module.vpc.vpc_id
+  vpc_id = data.aws_default_vpc.default.id
 
   ingress {
     from_port   = 5432
@@ -45,9 +41,9 @@ resource "aws_security_group" "bean_gardener_rds" {
   }
 
   egress {
-    from_port   = 5432
-    to_port     = 5432
-    protocol    = "tcp"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -65,7 +61,6 @@ resource "aws_db_parameter_group" "bean_gardener" {
     value = "1"
   }
 }
-
 
 resource "aws_db_instance" "bean_gardener" {
   identifier             = "bean_gardener"
@@ -101,4 +96,3 @@ variable "DB_PASSWORD" {
   type        = string
   sensitive   = true
 }
-

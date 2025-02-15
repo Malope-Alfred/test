@@ -11,20 +11,30 @@ provider "aws" {
   region = "af-south-1"
 }
 
-data "aws_vpc" "default" {
-  default = true
-}
+resource "aws_vpc" "main" {
+  cidr_block = "10.0.0.0/16"
 
-data "aws_subnets" "default" {
-  filter {
-    name   = "vpc-id"
-    values = [data.aws_vpc.default.id]
+  tags = {
+    Name = "main_vpc"
   }
 }
 
+resource "aws_subnet" "public" {
+  count = 3
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = cidrsubnet(aws_vpc.main.cidr_block, 8, count.index)
+  availability_zone = element(data.aws_availability_zones.available.names, count.index)
+
+  tags = {
+    Name = "public_subnet_${count.index}"
+  }
+}
+
+data "aws_availability_zones" "available" {}
+
 resource "aws_db_subnet_group" "bean_gardener" {
   name       = "bean_gardener"
-  subnet_ids = data.aws_subnets.default.ids
+  subnet_ids = aws_subnet.public[*].id
 
   tags = {
     Name = "bean_gardener_subnet"
@@ -33,7 +43,7 @@ resource "aws_db_subnet_group" "bean_gardener" {
 
 resource "aws_security_group" "bean_gardener_rds" {
   name   = "bean_gardener_rds"
-  vpc_id = data.aws_vpc.default.id
+  vpc_id = aws_vpc.main.id
 
   ingress {
     from_port   = 5432
@@ -65,7 +75,7 @@ resource "aws_db_parameter_group" "bean_gardener" {
 }
 
 resource "aws_db_instance" "bean_gardener" {
-  identifier             = "gardener"
+  identifier             = "bean_gardener"
   instance_class         = "db.t4.micro"
   allocated_storage      = 20
   storage_type           = "gp2"

@@ -83,7 +83,7 @@ resource "aws_security_group" "bean_gardener_rds" {
 }
 
 resource "aws_db_parameter_group" "bean_gardener" {
-  name   = "gardener"
+  name   = "beangardenertest"
   family = "postgres16"
 
   parameter {

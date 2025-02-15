@@ -11,18 +11,17 @@ provider "aws" {
   region = "af-south-1"
 }
 
-# Data source to get the default VPC
-data "aws_default_vpc" "default" {}
+data "aws_vpc" "default" {
+  default = true
+}
 
-# Data source to get the default subnets
-data "aws_default_subnet" "default" {
-  for_each = data.aws_availability_zones.available.names
-  availability_zone = each.value
+data "aws_subnet_ids" "default" {
+  vpc_id = data.aws_vpc.default.id
 }
 
 resource "aws_db_subnet_group" "bean_gardener" {
   name       = "bean_gardener"
-  subnet_ids = [for subnet in data.aws_default_subnet.default : subnet.id]
+  subnet_ids = data.aws_subnet_ids.default.ids
 
   tags = {
     Name = "bean_gardener_subnet"
@@ -31,7 +30,7 @@ resource "aws_db_subnet_group" "bean_gardener" {
 
 resource "aws_security_group" "bean_gardener_rds" {
   name   = "bean_gardener_rds"
-  vpc_id = data.aws_default_vpc.default.id
+  vpc_id = data.aws_vpc.default.id
 
   ingress {
     from_port   = 5432

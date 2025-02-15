@@ -1,12 +1,7 @@
 name: Deploy Terraform
 
 on:
-  push:
-    branches:
-      - main  # Change if using a different branch
-  pull_request:
-    branches:
-      - main
+  workflow_dispatch:
 
 permissions:
   contents: read

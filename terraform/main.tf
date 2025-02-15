@@ -12,8 +12,8 @@ resource "aws_db_instance" "bean-gardner" {
   storage_type           = "gp2"
   engine                 = "postgres"
   engine_version         = "16.3"
-  username               = var.db_username
-  password               = var.db_password
+  username               = var.DB_USERNAME
+  password               = var.DB_PASSWORD
   publicly_accessible    = true
   skip_final_snapshot    = true
 
@@ -23,13 +23,13 @@ resource "aws_db_instance" "bean-gardner" {
 }
 
 # Define variables
-variable "db_username" {
+variable "DB_USERNAME" {
   description = "Database username"
   type        = string
   sensitive   = true
 }
 
-variable "db_password" {
+variable "DB_PASSWORD" {
   description = "Database password"
   type        = string
   sensitive   = true
